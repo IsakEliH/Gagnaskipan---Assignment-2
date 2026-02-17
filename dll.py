@@ -118,6 +118,9 @@ class DLList:
         :param item: Element to insert
         :return: Position of inserted element
         """
+        # TODO: IF position is None and it is not the first node then all goes to shit
+        # TODO: FIX Sentinel Check
+
         new_node: Node = Node(item)
 
         # Add as first node if empty
@@ -143,6 +146,9 @@ class DLList:
         :param item:Element to insert
         :return: Position of inserted element
         """
+        # TODO: IF position is None and it is not the first node then all goes to shit
+        # TODO: FIX Sentinel Check
+
         new_node: Node = Node(item)
 
         # Add as first node if empty
@@ -192,29 +198,42 @@ class DLList:
         """
         Return position of the element at the head of the list if list non-empty, or None if list is empty.
         """
-        ...
+        if self.is_empty():
+            return None
+
+        next_node = self.sentinel_front.next
+        if next_node is not None:
+            return Position(next_node)
         return None
 
     def back_pos(self) -> Position | None:
         """
         Return position of the element at the end of list if list non-empty, or None if list is empty.
         """
-        ...
+        if self.is_empty():
+            return None
+
+        prev_node = self.sentinel_back.prev
+        if prev_node is not None:
+            return Position(prev_node)
         return None
 
     def prev_pos(self, pos: Position) -> Position | None:
         """
         Return position before 'pos', or None if already at front of list.
         """
-        ...
-        return None
+
+        if pos.node.prev.sentinel:
+            return None
+        return pos.node.prev
 
     def next_pos(self, pos: Position) -> Position | None:
         """
         Return position following 'pos', or None if already at end of list.
         """
-        ...
-        return None
+        if pos.node.next.sentinel:
+            return None
+        return pos.node.next
 
     #
     # End of fundamental section.
@@ -222,34 +241,47 @@ class DLList:
     # Avoid unnecessary code duplication.
     #
 
-    def front(self):
+    def front(self) -> object:
         """
         Returns the element at the front of the list.
         Time complexity: O(1)
         :return: If list non-empty, the front element, otherwise trows an exception.
         """
-        ...
-        return None
+        pos: Position | None = self.front_pos()
 
-    def back(self):
+        if pos is None:
+            raise IndexError("The list is empty")
+
+        return pos.node.item
+
+    def back(self) -> object:
         """
         Returns the element at the back of the list.
         Time complexity: O(1)
         :return: If list non-empty, the back element, otherwise trows an exception.
         """
-        ...
-        return None
+        pos: Position | None = self.back_pos()
 
-    def push_front(self, item):
+        if pos is None:
+            raise IndexError("The list is empty")
+
+        return pos.node.item
+
+    def push_front(self, item) -> None:
         """
         Insert an element to front of the list.
         Time complexity: O(1)
         :param item: element to insert
         :return: None
         """
-        ...
+        pos: Position | None = self.front_pos()
 
-    def pop_front(self):
+        if pos is None:
+            raise IndexError("The list is empty")
+
+        self.insert_before(pos, item)
+
+    def pop_front(self) -> None:
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
@@ -257,22 +289,28 @@ class DLList:
         """
         ...
 
-    def push_back(self, item):
+    def push_back(self, item) -> None:
         """
         Insert an element to back of the list.
         Time complexity: O(1)
         :param item: element to insert
         :return: None
         """
-        ...
+        pos: Position | None = self.back_pos()
 
-    def pop_back(self):
+        if pos is None:
+            raise IndexError("The list is empty")
+
+        self.insert_after(pos, item)
+
+    def pop_back(self) -> None:
         """
         Remove an element from the back of the list.
         Time complexity: O(1)
         :return: None, but trows an exception if list empty.
         """
         ...
+
 
 # ----------------------------------TESTING--------------------------------
 import random
@@ -292,16 +330,7 @@ for i in range(10):
         print("---- AFTER")
         if random.randint(0, 1) == 0:
             rand_list.append(s_pos)
+    print(len(array))
     print(array)
+    print(array.front())
     # print(array.get_at(s_pos))
-
-
-print("###############################################")
-print("###############################################")
-print("CHECK REMOVE FUNCTION")
-print("HOW MANY TO REMOVE ", len(rand_list))
-print(array)
-
-for pos in rand_list:
-    print(array.remove(pos))
-    print(array)
