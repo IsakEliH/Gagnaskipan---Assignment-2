@@ -115,10 +115,26 @@ class DLList:
         """
         Insert element following position 'pos' in the list.
         :param pos: Position to insert
-        :param item:Element to insert
+        :param item: Element to insert
         :return: Position of inserted element
         """
-        ...
+        new_node: Node = Node(item)
+
+        # Add as first node if empty
+        if self.is_empty():
+            return self._starter_node(new_node)
+
+        new_back_node = pos.node.next
+        new_back_node.prev = new_node
+
+        # Connect new node
+        new_node.next = new_back_node
+        new_node.prev = pos.node
+        pos.node.next = new_node
+
+        self._size += 1
+
+        return Position(new_node)
 
     def insert_before(self, pos: Position, item: object) -> Position:
         """
@@ -140,11 +156,9 @@ class DLList:
         new_node.next = pos.node
         pos.node.prev = new_node
 
-        new_pos = Position(new_node)
-
         self._size += 1
 
-        return new_pos
+        return Position(new_node)
 
     def remove(self, pos: Position) -> object:
         """
@@ -152,8 +166,16 @@ class DLList:
         :param pos: Position of element to remove.
         :return: Element deleted
         """
-        ...
-        return None
+        return_item = pos.node.item
+
+        pos.node.prev.next = pos.node.next
+        pos.node.next.prev = pos.node.prev
+
+        pos.node.next, pos.node.prev = None, None
+
+        self._size -= 1
+
+        return return_item
 
     def replace(self, pos: Position, item: object) -> object:
         """
@@ -251,13 +273,34 @@ class DLList:
         """
         ...
 
+# ----------------------------------TESTING--------------------------------
+import random
 
 array = DLList()
 print(array)
 s_pos = Position(Node(None))
+rand_list: list[Position] = []
 for i in range(10):
-    s_pos = array.insert_before(s_pos, i)
+    if random.randint(0, 1) == 1:
+        s_pos = array.insert_before(s_pos, i)
+        print("---- BEFORE")
+        if random.randint(0, 1) == 0:
+            rand_list.append(s_pos)
+    else:
+        s_pos = array.insert_after(s_pos, i)
+        print("---- AFTER")
+        if random.randint(0, 1) == 0:
+            rand_list.append(s_pos)
     print(array)
-    print(array.get_at(s_pos))
+    # print(array.get_at(s_pos))
 
+
+print("###############################################")
+print("###############################################")
+print("CHECK REMOVE FUNCTION")
+print("HOW MANY TO REMOVE ", len(rand_list))
 print(array)
+
+for pos in rand_list:
+    print(array.remove(pos))
+    print(array)
