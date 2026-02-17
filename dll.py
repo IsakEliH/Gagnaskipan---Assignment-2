@@ -11,7 +11,7 @@ from iterator import NodeIterator
 class Position:
     __slots__ = ["node"]
 
-    def __init__(self, node):
+    def __init__(self, node: Node):
         self.node = node
 
 
@@ -20,7 +20,6 @@ class DLList:
         "sentinel_front",
         "sentinel_back",
         "_size",
-        "_current_node",
     ]
 
     def __init__(self):
@@ -30,8 +29,6 @@ class DLList:
         self.sentinel_front: Node = Node("SENTINEL_1", sentinel=True)
         self.sentinel_back: Node = Node("SENTINEL_2", sentinel=True)
         self._size = 0
-
-        self._current_node: Node = self.sentinel_back
 
     def __iter__(self) -> NodeIterator:
         """
@@ -47,8 +44,20 @@ class DLList:
         Time complexity: O(n)
         :return: The string representation.
         """
-        # TODO: Add string method
-        return ""
+        # TODO: Add better string method
+
+        if self.is_empty():
+            return "[]"
+
+        r_string = "["
+        current_node = self.sentinel_front.next
+
+        while not current_node.sentinel:
+            r_string += str(current_node.item) + ", "
+            current_node = current_node.next
+
+        r_string = r_string[:-2] if r_string[-2:] == ", " else r_string
+        return r_string + "]"
 
     def __len__(self):
         """
@@ -58,7 +67,7 @@ class DLList:
         """
         return self._size
 
-    def _starter_node(self, new_node: Node) -> None:
+    def _starter_node(self, new_node: Node) -> Position:
         """
         Helper function for when adding the first node:
         Makes this node the started node (the first node)
@@ -66,6 +75,8 @@ class DLList:
 
         :param new_node: The new starter node
         :type new_node: Node
+        :returns: current position
+        :rtype: Position
         """
 
         # Make the sentinel back and front point at the same starting node
@@ -77,9 +88,11 @@ class DLList:
 
         new_node.prev = self.sentinel_front
         new_node.next = self.sentinel_back
-        self._current_node = new_node
+        pos = Position(new_node)
 
         self._size += 1
+
+        return pos
 
     def is_empty(self):
         """
@@ -95,8 +108,8 @@ class DLList:
         :param pos: Position to insert
         :return: Element
         """
-        ...
-        return None
+
+        return pos.node.item
 
     def insert_after(self, pos: Position, item: object) -> Position:
         """
@@ -114,7 +127,24 @@ class DLList:
         :param item:Element to insert
         :return: Position of inserted element
         """
-        ...
+        new_node: Node = Node(item)
+
+        # Add as first node if empty
+        if self.is_empty():
+            return self._starter_node(new_node)
+
+        new_front_node = pos.node.prev
+        new_front_node.next = new_node
+
+        new_node.prev = new_front_node
+        new_node.next = pos.node
+        pos.node.prev = new_node
+
+        new_pos = Position(new_node)
+
+        self._size += 1
+
+        return new_pos
 
     def remove(self, pos: Position) -> object:
         """
@@ -220,3 +250,14 @@ class DLList:
         :return: None, but trows an exception if list empty.
         """
         ...
+
+
+array = DLList()
+print(array)
+s_pos = Position(Node(None))
+for i in range(10):
+    s_pos = array.insert_before(s_pos, i)
+    print(array)
+    print(array.get_at(s_pos))
+
+print(array)
