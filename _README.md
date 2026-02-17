@@ -1,1 +1,0 @@
-# Gagnaskipan - Assignment 2
