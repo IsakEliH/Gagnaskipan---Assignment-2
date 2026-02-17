@@ -240,6 +240,30 @@ class DLList:
     # Implement the methods below by, for the most part, using/calling the ones you have implemented above.
     # Avoid unnecessary code duplication.
     #
+    def _get_endpoint(self, endpoint: str = "front") -> Position:
+        """
+        Helper function to reduce code duplication.
+        Returns the position of the front or back of the list.
+        raises error when list is empty.
+
+        :param endpoint: Should only be "front" or "back". If not make "front"
+        :raises IndexError: When the list is empty
+        :return: The position of the front or back
+        :rtype: Position
+        """
+
+        # To make sure that KeyError does not show up
+        if endpoint != "front" or endpoint != "back":
+            endpoint = "front"
+
+        front_back: dict = {"front": self.front_pos(), "back": self.back_pos()}
+
+        pos: Position | None = front_back[endpoint]
+
+        if pos is None:
+            raise IndexError("The list is empty")
+
+        return pos
 
     def front(self) -> object:
         """
@@ -247,10 +271,7 @@ class DLList:
         Time complexity: O(1)
         :return: If list non-empty, the front element, otherwise trows an exception.
         """
-        pos: Position | None = self.front_pos()
-
-        if pos is None:
-            raise IndexError("The list is empty")
+        pos: Position = self._get_endpoint("front")
 
         return pos.node.item
 
@@ -260,10 +281,7 @@ class DLList:
         Time complexity: O(1)
         :return: If list non-empty, the back element, otherwise trows an exception.
         """
-        pos: Position | None = self.back_pos()
-
-        if pos is None:
-            raise IndexError("The list is empty")
+        pos: Position = self._get_endpoint("back")
 
         return pos.node.item
 
@@ -274,20 +292,22 @@ class DLList:
         :param item: element to insert
         :return: None
         """
-        pos: Position | None = self.front_pos()
-
-        if pos is None:
-            raise IndexError("The list is empty")
+        pos: Position = self._get_endpoint("front")
 
         self.insert_before(pos, item)
 
-    def pop_front(self) -> None:
+    def pop_front(self) -> object:
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
-        :return: None, but trows an exception if list empty.
+        :return: The item (because it is 'pop'), but trows an exception if list empty.
+        :rtype: object
         """
-        ...
+        pos: Position = self._get_endpoint("front")
+
+        item = self.remove(pos)
+
+        return item
 
     def push_back(self, item) -> None:
         """
@@ -296,20 +316,22 @@ class DLList:
         :param item: element to insert
         :return: None
         """
-        pos: Position | None = self.back_pos()
-
-        if pos is None:
-            raise IndexError("The list is empty")
+        pos: Position = self._get_endpoint("back")
 
         self.insert_after(pos, item)
 
-    def pop_back(self) -> None:
+    def pop_back(self) -> object:
         """
         Remove an element from the back of the list.
         Time complexity: O(1)
-        :return: None, but trows an exception if list empty.
+        :return: The item (because it is 'pop'), but trows an exception if list empty.
+        :rtype: object
         """
-        ...
+        pos: Position = self._get_endpoint("back")
+
+        item = self.remove(pos)
+
+        return item
 
 
 # ----------------------------------TESTING--------------------------------
