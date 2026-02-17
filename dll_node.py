@@ -10,3 +10,7 @@ class Node:
         self.next: Node | None = next
         self.prev: Node | None = prev
         self.sentinel: bool = sentinel
+
+    # TODO: Remove Maybe
+    def __str__(self) -> str:
+        return str(self.item)
