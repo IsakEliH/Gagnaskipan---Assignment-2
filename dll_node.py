@@ -3,9 +3,10 @@ class Node:
     # compact data structure to represent its class member
     # variables (uses dict by default, but now uses a fixed-size
     # array!). You see, knowing data-structures IS IMPORTANT!
-    __slots__ = ['prev', 'item', 'next']
+    __slots__ = ["prev", "item", "next", "sentinel"]
 
-    def __init__(self, prev, item, next):
-        self.prev = prev
-        self.item = item
-        self.next = next
+    def __init__(self, item, next=None, prev=None, sentinel=False):
+        self.item: object = item
+        self.next: Node | None = next
+        self.prev: Node | None = prev
+        self.sentinel: bool = sentinel
