@@ -30,13 +30,21 @@ class DLList:
         self.sentinel_back: Node = Node("SENTINEL_2", sentinel=True)
         self._size = 0
 
-    def __iter__(self) -> NodeIterator:
+        # Wire sentinels to avoid edge cases
+        self.sentinel_front.next = self.sentinel_back
+        self.sentinel_front.prev = self.sentinel_back
+        self.sentinel_back.prev = self.sentinel_front
+        self.sentinel_back.next = self.sentinel_front
+
+    def __iter__(self):
         """
         Implemented as part of the iterator interface to allow: for ... in A
         :return: Iterator object.
         """
-        # TODO: Add Iter method
-        ...
+        current = self.sentinel_front.next
+        while current is not None and not current.sentinel:
+            yield current.item
+            current = current.next
 
     def __str__(self):
         """
@@ -44,20 +52,7 @@ class DLList:
         Time complexity: O(n)
         :return: The string representation.
         """
-        # TODO: Add better string method
-
-        if self.is_empty():
-            return "[]"
-
-        r_string = "["
-        current_node = self.sentinel_front.next
-
-        while not current_node.sentinel:
-            r_string += str(current_node.item) + ", "
-            current_node = current_node.next
-
-        r_string = r_string[:-2] if r_string[-2:] == ", " else r_string
-        return r_string + "]"
+        return "[" + ", ".join(str(x) for x in self) + "]"
 
     def __len__(self):
         """
@@ -78,21 +73,14 @@ class DLList:
         :returns: current position
         :rtype: Position
         """
-
-        # Make the sentinel back and front point at the same starting node
         self.sentinel_front.next = new_node
-        self.sentinel_front.prev = self.sentinel_back
-
         self.sentinel_back.prev = new_node
-        self.sentinel_back.next = self.sentinel_front
 
         new_node.prev = self.sentinel_front
         new_node.next = self.sentinel_back
-        pos = Position(new_node)
 
         self._size += 1
-
-        return pos
+        return Position(new_node)
 
     def is_empty(self):
         """
@@ -118,8 +106,6 @@ class DLList:
         :param item: Element to insert
         :return: Position of inserted element
         """
-        # TODO: IF position is None and it is not the first node then all goes to shit
-        # TODO: FIX Sentinel Check
 
         new_node: Node = Node(item)
 
@@ -146,8 +132,6 @@ class DLList:
         :param item:Element to insert
         :return: Position of inserted element
         """
-        # TODO: IF position is None and it is not the first node then all goes to shit
-        # TODO: FIX Sentinel Check
 
         new_node: Node = Node(item)
 
@@ -225,7 +209,7 @@ class DLList:
 
         if pos.node.prev.sentinel:
             return None
-        return pos.node.prev
+        return Position(pos.node.prev)
 
     def next_pos(self, pos: Position) -> Position | None:
         """
@@ -233,13 +217,14 @@ class DLList:
         """
         if pos.node.next.sentinel:
             return None
-        return pos.node.next
+        return Position(pos.node.next)
 
     #
     # End of fundamental section.
     # Implement the methods below by, for the most part, using/calling the ones you have implemented above.
     # Avoid unnecessary code duplication.
     #
+
     def _get_endpoint(self, endpoint: str = "front") -> Position:
         """
         Helper function to reduce code duplication.
@@ -253,7 +238,7 @@ class DLList:
         """
 
         # To make sure that KeyError does not show up
-        if endpoint != "front" or endpoint != "back":
+        if endpoint not in ("front", "back"):
             endpoint = "front"
 
         front_back: dict = {"front": self.front_pos(), "back": self.back_pos()}
@@ -292,9 +277,8 @@ class DLList:
         :param item: element to insert
         :return: None
         """
-        pos: Position = self._get_endpoint("front")
-
-        self.insert_before(pos, item)
+        # Insert right after the front sentinel
+        self.insert_after(Position(self.sentinel_front), item)
 
     def pop_front(self) -> object:
         """
@@ -316,9 +300,7 @@ class DLList:
         :param item: element to insert
         :return: None
         """
-        pos: Position = self._get_endpoint("back")
-
-        self.insert_after(pos, item)
+        self.insert_before(Position(self.sentinel_back), item)
 
     def pop_back(self) -> object:
         """
@@ -332,27 +314,3 @@ class DLList:
         item = self.remove(pos)
 
         return item
-
-
-# ----------------------------------TESTING--------------------------------
-import random
-
-array = DLList()
-print(array)
-s_pos = Position(Node(None))
-rand_list: list[Position] = []
-for i in range(10):
-    if random.randint(0, 1) == 1:
-        s_pos = array.insert_before(s_pos, i)
-        print("---- BEFORE")
-        if random.randint(0, 1) == 0:
-            rand_list.append(s_pos)
-    else:
-        s_pos = array.insert_after(s_pos, i)
-        print("---- AFTER")
-        if random.randint(0, 1) == 0:
-            rand_list.append(s_pos)
-    print(len(array))
-    print(array)
-    print(array.front())
-    # print(array.get_at(s_pos))
