@@ -184,8 +184,9 @@ class DLList:
         :param item: New element to replace the existing one.
         :return: The element replaced (formerly at position)
         """
-        ...
-        return None
+        existing_item = pos.node.item
+        pos.node.item = item
+        return existing_item
 
     def front_pos(self) -> Position | None:
         """
