@@ -7,27 +7,38 @@
 from dll_node import Node
 from iterator import NodeIterator
 
+
 class Position:
-    __slots__ = ['node']
+    __slots__ = ["node"]
 
     def __init__(self, node):
         self.node = node
 
 
 class DLList:
-
-    #
-    # Beginning of fundamental section.
-    #
+    __slots__ = [
+        "sentinel_front",
+        "sentinel_back",
+        "_size",
+        "_current_node",
+    ]
 
     def __init__(self):
-        ...
+        """
+        Create a sentinel node
+        """
+        self.sentinel_front: Node = Node("SENTINEL_1", sentinel=True)
+        self.sentinel_back: Node = Node("SENTINEL_2", sentinel=True)
+        self._size = 0
 
-    def __iter__(self):
+        self._current_node: Node = self.sentinel_back
+
+    def __iter__(self) -> NodeIterator:
         """
         Implemented as part of the iterator interface to allow: for ... in A
         :return: Iterator object.
         """
+        # TODO: Add Iter method
         ...
 
     def __str__(self):
@@ -36,7 +47,7 @@ class DLList:
         Time complexity: O(n)
         :return: The string representation.
         """
-        ...
+        # TODO: Add string method
         return ""
 
     def __len__(self):
@@ -45,8 +56,30 @@ class DLList:
         Time complexity: O(1)
         :return: Number of elements in the list.
         """
-        ...
-        return 0
+        return self._size
+
+    def _starter_node(self, new_node: Node) -> None:
+        """
+        Helper function for when adding the first node:
+        Makes this node the started node (the first node)
+        connected to both ends (sentinels)
+
+        :param new_node: The new starter node
+        :type new_node: Node
+        """
+
+        # Make the sentinel back and front point at the same starting node
+        self.sentinel_front.next = new_node
+        self.sentinel_front.prev = self.sentinel_back
+
+        self.sentinel_back.prev = new_node
+        self.sentinel_back.next = self.sentinel_front
+
+        new_node.prev = self.sentinel_front
+        new_node.next = self.sentinel_back
+        self._current_node = new_node
+
+        self._size += 1
 
     def is_empty(self):
         """
@@ -54,8 +87,7 @@ class DLList:
         Time complexity: O(1)
         :return: True if empty, otherwise false
         """
-        ...
-        return True
+        return self._size == 0
 
     def get_at(self, pos: Position) -> object:
         """
@@ -126,8 +158,8 @@ class DLList:
 
     def next_pos(self, pos: Position) -> Position | None:
         """
-         Return position following 'pos', or None if already at end of list.
-         """
+        Return position following 'pos', or None if already at end of list.
+        """
         ...
         return None
 
