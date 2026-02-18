@@ -105,7 +105,7 @@ class SLList:
             self._head = new_node
         self._len += 1
 
-    def pop_front(self) -> object:
+    def pop_front(self):
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
