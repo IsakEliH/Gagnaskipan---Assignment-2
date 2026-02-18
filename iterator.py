@@ -1,5 +1,5 @@
 class NodeIterator:
-    def __init__(self, node, node_end = None):
+    def __init__(self, node, node_end=None):
         self.__node = node
         self.__node_end = node_end
 
@@ -7,7 +7,7 @@ class NodeIterator:
         return self
 
     def __next__(self):
-        if self.__node is self.__node_end:
+        if self.__node is None or self.__node is self.__node_end:
             raise StopIteration
         item = self.__node.item
         self.__node = self.__node.next
