@@ -17,8 +17,8 @@ class SLList:
     - `back()`: Return the last item without removing it.
     - `push_front(item)`: Insert `item` at the front.
     - `push_back(item)`: Insert `item` at the back.
-    - `pop_front()`: Remove and return the first item.
-    - `pop_back()`: Remove and return the last item.
+    - `pop_front()`: Remove first item return None.
+    - `pop_back()`: Remove last item return None.
     """
 
     def __init__(self):
@@ -109,14 +109,11 @@ class SLList:
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
-        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
+        :return: None, but trows an exception if list empty.
         """
 
         if self.is_empty():
             raise IndexError("pop_front called on an empty list")
-
-        old_head = self._head
-        item = old_head.item  # save item to return
 
         # if n == 1
         if self._head is self._tail:
@@ -125,7 +122,6 @@ class SLList:
             self._head = self._head.next
 
         self._len -= 1
-        return item
 
     def push_back(self, item):
         """
@@ -149,7 +145,7 @@ class SLList:
         """
         Remove an element from the back of the list.
         Time complexity: O(n)
-        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
+        :return: None, but trows an exception if list empty.
         """
 
         if self.is_empty():
@@ -157,19 +153,15 @@ class SLList:
 
         # if n == 1
         if self._head is self._tail:
-            item = self._head.item
             self._head = self._tail = None
             self._len -= 1
-            return item
 
         # n >= 2: find the node right before tail
         prev = self._head
         while prev.next is not self._tail:
             prev = prev.next
 
-        item = self._tail.item
         prev.next = None
         self._tail = prev
 
         self._len -= 1
-        return item

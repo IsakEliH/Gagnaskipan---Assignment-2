@@ -24,8 +24,8 @@ class DLList:
     - `back()`: Return the last item without removing it.
     - `push_front(item)`: Insert `item` at the front.
     - `push_back(item)`: Insert `item` at the back.
-    - `pop_front()`: Remove and return the first item.
-    - `pop_back()`: Remove and return the last item.
+    - `pop_front()`: Remove first item return None.
+    - `pop_back()`: Remove last item return None.
     """
 
     __slots__ = [
@@ -311,19 +311,16 @@ class DLList:
         # Insert right after the front sentinel
         self.insert_after(Position(self.sentinel_front), item)
 
-    def pop_front(self) -> object:
+    def pop_front(self) -> None:
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
 
-        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
-        :rtype: object
+        :return: None, but trows an exception if list empty.
         """
         pos: Position = self._get_endpoint("front")
 
-        item = self.remove(pos)
-
-        return item
+        self.remove(pos)
 
     def push_back(self, item) -> None:
         """
@@ -335,16 +332,13 @@ class DLList:
         """
         self.insert_before(Position(self.sentinel_back), item)
 
-    def pop_back(self) -> object:
+    def pop_back(self) -> None:
         """
         Remove an element from the back of the list.
         Time complexity: O(1)
 
-        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
-        :rtype: object
+        :return: None, but trows an exception if list empty.
         """
         pos: Position = self._get_endpoint("back")
 
-        item = self.remove(pos)
-
-        return item
+        self.remove(pos)
