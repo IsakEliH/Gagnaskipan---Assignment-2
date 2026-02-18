@@ -16,6 +16,18 @@ class Position:
 
 
 class DLList:
+    """
+    **Methods For Both SLL and DLL**
+
+    - `is_empty()`: Returns True if empty
+    - `front()`: Return the first item without removing it.
+    - `back()`: Return the last item without removing it.
+    - `push_front(item)`: Insert `item` at the front.
+    - `push_back(item)`: Insert `item` at the back.
+    - `pop_front()`: Remove and return the first item.
+    - `pop_back()`: Remove and return the last item.
+    """
+
     __slots__ = [
         "sentinel_front",
         "sentinel_back",

@@ -9,6 +9,18 @@ from iterator import NodeIterator
 
 
 class SLList:
+    """
+    **Methods For Both SLL and DLL**
+
+    - `is_empty()`: Returns True if empty
+    - `front()`: Return the first item without removing it.
+    - `back()`: Return the last item without removing it.
+    - `push_front(item)`: Insert `item` at the front.
+    - `push_back(item)`: Insert `item` at the back.
+    - `pop_front()`: Remove and return the first item.
+    - `pop_back()`: Remove and return the last item.
+    """
+
     def __init__(self):
         """
         Constructor.
@@ -98,7 +110,7 @@ class SLList:
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
-        :return: None, but trows an exception if list empty.
+        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
         """
         if self.is_empty():
             raise IndexError("pop_front called on an empty list")
@@ -136,7 +148,7 @@ class SLList:
         """
         Remove an element from the back of the list.
         Time complexity: O(n)
-        :return: None, but trows an exception if list empty.
+        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
         """
         if self.is_empty():
             raise IndexError("pop_front called on an empty list")
