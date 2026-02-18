@@ -99,11 +99,10 @@ class SLList:
         new_node: Node = Node(item)
 
         if self.is_empty():
-            self._head, self._tail = new_node, new_node
-            return
-
-        new_node.next = self._head
-        self._head = new_node
+            self._head = self._tail = new_node
+        else:
+            new_node.next = self._head
+            self._head = new_node
         self._len += 1
 
     def pop_front(self) -> object:
@@ -112,18 +111,21 @@ class SLList:
         Time complexity: O(1)
         :return: returns the item (because it is 'pop'), but trows an exception if list empty.
         """
+
         if self.is_empty():
             raise IndexError("pop_front called on an empty list")
 
-        if self._head == self._tail:  # if n==1
-            self._head, self._tail = None, None
+        old_head = self._head
+        item = old_head.item  # save item to return
 
-        r_value = self._head  # The return value
-
-        self._head = self._head.next if self._head is not None else None
+        # if n == 1
+        if self._head is self._tail:
+            self._head = self._tail = None
+        else:
+            self._head = self._head.next
 
         self._len -= 1
-        return r_value
+        return item
 
     def push_back(self, item):
         """
@@ -136,11 +138,10 @@ class SLList:
         new_node: Node = Node(item)
 
         if self.is_empty():
-            self._head, self._tail = new_node, new_node
-            return
-
-        self._tail.next = new_node
-        self._tail = new_node
+            self._head = self._tail = new_node
+        else:
+            self._tail.next = new_node
+            self._tail = new_node
 
         self._len += 1
 
@@ -150,25 +151,25 @@ class SLList:
         Time complexity: O(n)
         :return: returns the item (because it is 'pop'), but trows an exception if list empty.
         """
+
         if self.is_empty():
-            raise IndexError("pop_front called on an empty list")
+            raise IndexError("pop_back called on an empty list")
 
-        if self._head == self._tail:  # if n==1
-            self._head, self._tail = None, None
+        # if n == 1
+        if self._head is self._tail:
+            item = self._head.item
+            self._head = self._tail = None
+            self._len -= 1
+            return item
 
-        current_node = self._head
-        next_node = current_node.next
+        # n >= 2: find the node right before tail
+        prev = self._head
+        while prev.next is not self._tail:
+            prev = prev.next
 
-        # Loop until end is found
-        while next_node.next is not None:
-            current_node = current_node.next
-            next_node = current_node.next
-
-        # Put self tail to the new last node
-        self._tail = current_node
-
-        # So the last node points at None
-        current_node.next = None
+        item = self._tail.item
+        prev.next = None
+        self._tail = prev
 
         self._len -= 1
-        return next_node
+        return item
