@@ -36,20 +36,19 @@ class DLList:
         self.sentinel_back.prev = self.sentinel_front
         self.sentinel_back.next = self.sentinel_front
 
-    def __iter__(self):
+    def __iter__(self) -> NodeIterator:
         """
         Implemented as part of the iterator interface to allow: for ... in A
+
         :return: Iterator object.
         """
-        current = self.sentinel_front.next
-        while current is not None and not current.sentinel:
-            yield current.item
-            current = current.next
+        return NodeIterator(self.sentinel_front.next, self.sentinel_back)
 
     def __str__(self):
         """
         String representation of the list.
         Time complexity: O(n)
+
         :return: The string representation.
         """
         return "[" + ", ".join(str(x) for x in self) + "]"
@@ -86,6 +85,7 @@ class DLList:
         """
         Checks if list is empty.
         Time complexity: O(1)
+
         :return: True if empty, otherwise false
         """
         return self._size == 0
@@ -93,6 +93,7 @@ class DLList:
     def get_at(self, pos: Position) -> object:
         """
         Return element at position 'pos'.
+
         :param pos: Position to insert
         :return: Element
         """
@@ -102,10 +103,19 @@ class DLList:
     def insert_after(self, pos: Position, item: object) -> Position:
         """
         Insert element following position 'pos' in the list.
+
+        :raises IndexError: Invalid position
         :param pos: Position to insert
         :param item: Element to insert
         :return: Position of inserted element
         """
+        if (
+            pos is None
+            or pos.node is None
+            or pos.node.next is None
+            or pos.node.prev is None
+        ):
+            raise IndexError("Invalid position")
 
         new_node: Node = Node(item)
 
@@ -128,10 +138,19 @@ class DLList:
     def insert_before(self, pos: Position, item: object) -> Position:
         """
         Insert element before position 'pos' in the list.
+
+        :raises IndexError: Invalid position
         :param pos: Position to insert
-        :param item:Element to insert
+        :param item: Element to insert
         :return: Position of inserted element
         """
+        if (
+            pos is None
+            or pos.node is None
+            or pos.node.next is None
+            or pos.node.prev is None
+        ):
+            raise IndexError("Invalid position")
 
         new_node: Node = Node(item)
 
@@ -153,9 +172,13 @@ class DLList:
     def remove(self, pos: Position) -> object:
         """
         Remove element at position 'pos' in the list.
+
         :param pos: Position of element to remove.
         :return: Element deleted
         """
+        if pos is None or pos.node is None or pos.node.sentinel:
+            raise IndexError("Cannot remove sentinel / invalid position")
+
         return_item = pos.node.item
 
         pos.node.prev.next = pos.node.next
@@ -170,6 +193,7 @@ class DLList:
     def replace(self, pos: Position, item: object) -> object:
         """
         Replace element at position 'pos' in the list.
+
         :param pos: Position of element to replace
         :param item: New element to replace the existing one.
         :return: The element replaced (formerly at position)
@@ -184,11 +208,7 @@ class DLList:
         """
         if self.is_empty():
             return None
-
-        next_node = self.sentinel_front.next
-        if next_node is not None:
-            return Position(next_node)
-        return None
+        return Position(self.sentinel_front.next)
 
     def back_pos(self) -> Position | None:
         """
@@ -196,11 +216,7 @@ class DLList:
         """
         if self.is_empty():
             return None
-
-        prev_node = self.sentinel_back.prev
-        if prev_node is not None:
-            return Position(prev_node)
-        return None
+        return Position(self.sentinel_back.prev)
 
     def prev_pos(self, pos: Position) -> Position | None:
         """
@@ -254,6 +270,7 @@ class DLList:
         """
         Returns the element at the front of the list.
         Time complexity: O(1)
+
         :return: If list non-empty, the front element, otherwise trows an exception.
         """
         pos: Position = self._get_endpoint("front")
@@ -264,6 +281,7 @@ class DLList:
         """
         Returns the element at the back of the list.
         Time complexity: O(1)
+
         :return: If list non-empty, the back element, otherwise trows an exception.
         """
         pos: Position = self._get_endpoint("back")
@@ -274,6 +292,7 @@ class DLList:
         """
         Insert an element to front of the list.
         Time complexity: O(1)
+
         :param item: element to insert
         :return: None
         """
@@ -284,7 +303,8 @@ class DLList:
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
-        :return: The item (because it is 'pop'), but trows an exception if list empty.
+
+        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
         :rtype: object
         """
         pos: Position = self._get_endpoint("front")
@@ -297,6 +317,7 @@ class DLList:
         """
         Insert an element to back of the list.
         Time complexity: O(1)
+
         :param item: element to insert
         :return: None
         """
@@ -306,7 +327,8 @@ class DLList:
         """
         Remove an element from the back of the list.
         Time complexity: O(1)
-        :return: The item (because it is 'pop'), but trows an exception if list empty.
+
+        :return: returns the item (because it is 'pop'), but trows an exception if list empty.
         :rtype: object
         """
         pos: Position = self._get_endpoint("back")
