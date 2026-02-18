@@ -1,7 +1,11 @@
 # Choose the one most appropriate of the following ADT for your implementation.
-import stack
-import queue
-import deque
+from stack import Stack
+from queue import Queue
+from deque import Deque
+
+from sll import SLList
+from dll import DLList
+
 
 def match_brackets(s: str) -> bool:
     """
@@ -17,22 +21,43 @@ def match_brackets(s: str) -> bool:
         "]b ["   <--- close with ] before opening
         "{{ a }"   <-- missing }
     """
-    ...
-    return False
+
+    data_type = SLList()
+    lst = Stack(data_type)
+
+    brackets: dict[str, str] = {")": "(", "]": "[", "}": "{"}
+    openers: set[str] = set(brackets.values())
+    closers: set[str] = set(brackets)
+
+    for char in s:
+        if char in openers:
+            lst.push(char)
+        elif char in closers:
+            if lst.is_empty():
+                return False
+
+            top = lst.top()
+            lst.pop()
+            if top != brackets[char]:
+                return False
+
+    # If empty in the end then successful
+    return lst.is_empty()
+
 
 def main():
-    name = 'brackets.txt'
+    name = "brackets.txt"
     try:
-        with open(name, 'r') as file:
+        with open(name, "r") as file:
             lines = file.readlines()
             for line in lines:
                 line = line.strip()
-                print(f'{line:40} {match_brackets(line)}')
+                print(f"{line:40} {match_brackets(line)}")
     except FileNotFoundError:
         print("File not found!")
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
 if __name__ == "__main__":
     main()
-
