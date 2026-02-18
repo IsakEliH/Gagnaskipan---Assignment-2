@@ -4,12 +4,13 @@
 # Student(s):
 #  - Ísak Elí Hauksson
 #
-import sll
-import dll
+
+from sll import SLList
+from dll import DLList
+
 
 class Stack:
-
-    def __init__(self, lst):
+    def __init__(self, lst: SLList | DLList):
         self._lst = lst
 
     def __len__(self):
@@ -54,4 +55,3 @@ class Stack:
         :return:  None
         """
         self._lst.push_front(item)
-

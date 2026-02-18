@@ -4,12 +4,13 @@
 # Student(s):
 #  - Ísak Elí Hauksson
 #
-import sll
-import dll
+
+from sll import SLList
+from dll import DLList
+
 
 class Deque:
-
-    def __init__(self, lst):
+    def __init__(self, lst: SLList | DLList):
         """
         Constructor.
         """
@@ -81,4 +82,3 @@ class Deque:
         :return: None. Raises an exception if empty.
         """
         ...
-

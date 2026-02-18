@@ -4,19 +4,20 @@
 # Student(s):
 #  - Ísak Elí Hauksson
 #
-import sll
-import dll
+
+from sll import SLList
+from dll import DLList
+
 
 class Queue:
-
-    def __init__(self, lst):
-        """"
+    def __init__(self, lst: SLList | DLList):
+        """ "
         Constructor.
         """
         ...
 
     def __len__(self):
-        """"
+        """ "
         Returns the number of elements in the queue.
         """
         ...
@@ -55,4 +56,3 @@ class Queue:
         Removes the element at the front of the queue (without returning)..
         """
         ...
-
