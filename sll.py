@@ -155,6 +155,7 @@ class SLList:
         if self._head is self._tail:
             self._head = self._tail = None
             self._len -= 1
+            return
 
         # n >= 2: find the node right before tail
         prev = self._head
