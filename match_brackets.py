@@ -25,20 +25,20 @@ def match_brackets(s: str) -> bool:
     data_type = SLList()
     lst = Stack(data_type)
 
-    brackets: dict[str, str] = {")": "(", "]": "[", "}": "{"}
-    openers: set[str] = set(brackets.values())
-    closers: set[str] = set(brackets)
+    BRACKETS: dict[str, str] = {")": "(", "]": "[", "}": "{"}
+    OPENERS: set[str] = set(BRACKETS.values())
+    CLOSERS: set[str] = set(BRACKETS)
 
     for char in s:
-        if char in openers:
+        if char in OPENERS:
             lst.push(char)
-        elif char in closers:
+        elif char in CLOSERS:
             if lst.is_empty():
                 return False
 
             top = lst.top()
             lst.pop()
-            if top != brackets[char]:
+            if top != BRACKETS[char]:
                 return False
 
     # If empty in the end then successful
